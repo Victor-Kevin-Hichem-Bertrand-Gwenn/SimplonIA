@@ -15,6 +15,7 @@ class Lieu :
         self.x = x
         self.y = y
 
+
     def distance(self, lieu_suivant):
     #Calcule la distance euclidienne entre le lieu(x1, y1) et le lieu suivant(x2, y2)
         dist = np.sqrt((self.x - lieu_suivant.x)**2 + (self.y - lieu_suivant.y)**2)
@@ -30,16 +31,30 @@ class Graph :
         self.NB_LIEUX = NB_LIEUX
         self.liste_lieux = [Lieu(random.randint(0, LARGEUR), random.randint(0, HAUTEUR)) for _ in range(NB_LIEUX)]
 
-    # Créer la matrice euclidienne de chaque points 
+
     def calcul_matrice_cout_od(self):
-        self.matrice_od = np.zeros((self.NB_LIEUX, self.NB_LIEUX))
+        lieux = len(self.liste_lieux)
+        distance_matrice = np.ones((lieux,lieux))
+        for i,lieu1 in enumerate(self.liste_lieux):
+            for j, lieu2 in enumerate(self.liste_lieux):
+                distance_matrice[i, j] = lieu1.distance_euclidienne(lieu2)
 
-        for i in range(self.nb_lieux):
-            for j in range(self.NB_LIEUX):
-                if i == j: break
-                self.matrice_od[i][j] = Lieu.distance(self.liste_lieux[i], self.liste_lieux[j])
-                self.matrice_od[i][j] = self.matrice_od[i][j]
+        self.matrice_cout_od = distance_matrice
 
-        self.matrice_od = pd.DataFrame(self.matrice_od)
+        return distance_matrice
 
-    
+
+    def plus_proche_voisin(self,lieu,matrice_od):
+        self.le_plus_proche_voisin = np.argmin(matrice_od[lieu])
+        return self.le_plus_proche_voisin
+        
+
+lieu = Lieu(50, 100)
+
+lieu2 = Lieu(100, 100)
+
+dist = lieu.distance_euclidienne(lieu2)
+
+graph = Graph([lieu,lieu2])
+mat = graph.calcul_matrice_cout_od()
+print("ok")

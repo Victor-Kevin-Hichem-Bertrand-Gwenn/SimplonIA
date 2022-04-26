@@ -31,5 +31,3 @@ fenetre.bind('<Escape>', lambda x: fenetre.destroy())
 
 # affichage de la fenetre créée : 
 fenetre.mainloop()
-
-

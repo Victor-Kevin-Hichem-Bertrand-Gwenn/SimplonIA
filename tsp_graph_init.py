@@ -41,5 +41,3 @@ class Graph :
                 self.matrice_od[i][j] = self.matrice_od[i][j]
 
         self.matrice_od = pd.DataFrame(self.matrice_od)
-
-    

@@ -14,10 +14,8 @@ class Lieu:
         # x, y = coordonnées du lieu
         self.x = x 
         self.y = y      
-        # Lieu.lieu_liste = lieu_liste   
 
     def lieu (x, y):
-        # lieu_liste = []
         Lieu.lieu_liste.append(x)
         Lieu.lieu_liste.append(y)
         return Lieu.lieu_liste
@@ -35,22 +33,17 @@ class Lieu:
 
 
 
-
 # Cette classe est utilisée pour mémoriser une liste de lieux (variable liste_lieux).
 class Graph :
     nb_lieux = 20
     largeur=800
     hauteur=600
 
-    def __init__(self, liste_lieux,largeur=800, hauteur=600):
+    def __init__(self, liste_lieux):
         self.liste_lieux = liste_lieux 
-        self.hauteur = hauteur
-        self.largeur = largeur 
 
     # méthode pour lister les lieux : on ajoute aléatoirement des coordonnées
     def lister_lieu():
-        # largeur=800
-        # hauteur=600
         # création d'une liste_lieux avec x et y aléatoires
         for lieu in range(Graph.nb_lieux):
             x = randint(0, Graph.largeur)
@@ -61,7 +54,6 @@ class Graph :
 
     def dataframe():
             # numérotation des lieux 
-            # nb_lieux=20
             index_lieux = []
             for element in range(1, Graph.nb_lieux+1):
                 index_lieux.append(element)

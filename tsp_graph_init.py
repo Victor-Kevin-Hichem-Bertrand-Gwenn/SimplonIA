@@ -14,10 +14,10 @@ class Lieu :
 class Graph :
     def __init__(self,liste_lieux) :
         self.liste_lieux = liste_lieux
-        largeur = 800
-        hauteur = 600
-        nb_lieux = 20
-        matrice_od = []
+        self.largeur = 800
+        self.hauteur = 600
+        self.nb_lieux = 20
+        self.matrice_od = []
 
     def calcul_matrice_cout_od(self):
         lieux = len(self.liste_lieux)

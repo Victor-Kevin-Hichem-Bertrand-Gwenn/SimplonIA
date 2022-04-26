@@ -192,5 +192,23 @@ class Route:
         for i, index_lieu in enumerate(self.ordre[:-1]):
             dist_totale += graph.liste_lieux[index_lieu].distance(graph.liste_lieux[self.ordre[i+1]])
 
-
         return dist_totale
+    
+    @classmethod
+    def ordre(cls,nb_lieux):
+        cls.ordre = [0]
+        tmp = list(range(1,nb_lieux))
+        random.shuffle(tmp)
+        cls.ordre.extend(tmp)
+        cls.ordre.append(0)
+        return cls.ordre
+
+
+    @classmethod
+    def calcul_distance_route(cls, ordre, matrice_od) :
+        cls.distance = 0
+        for i in range(len(ordre)-1):
+            cls.distance += matrice_od[ordre[i],ordre[i+1]]
+        return cls.distance
+
+

@@ -3,6 +3,8 @@ import pandas as pd
 from random import randint
 import random 
 
+
+
 # Cette classe sert à mémoriser les coordonnées x et y du lieu à visiter.
 # La classe disposera d'une fonction de calcul de distance euclidienne entre 2 lieux.
 class Lieu:
@@ -72,18 +74,23 @@ class Graph :
             load = pd.read_csv('df.csv')
             print(load)
 
-    # def save_csv():
-    #     df.to_csv (r"C:\Users\utilisateur\Documents\microsoft_ia\Cahier d'apprentissage\Projets\projet_isen\script\df.csv", index = False, header=True)
+    # def save_csv(chemin):
+    #     df = df.to_csv (chemin, index = False, header=True)
 
-    # def load_csv():
-    #     load = pd.read_csv('df.csv')
+    # def load_csv(nom_fichier):
+    #     load = pd.read_csv(nom_fichier)
 
+    def calcul_matrice_cout_od():
+        df = pd.read_csv('df.csv')
+        n_df=(df.values)
 
+        # array de 0 de dimension 20*20
+        matrix=np.zeros(((df.values).shape[0],(df.values).shape[0]))
 
-
-        
-
-
-
-
-
+        # boucles pour calculer la distance entre chaque lieu
+        for i in range((df.values).shape[0]):
+            for j in range((df.values).shape[0]):
+                matrix[i,j]=np.sqrt(np.sum((n_df[i]-n_df[j])**2))
+        print(matrix)
+        print("------------------")
+        print(matrix.shape)

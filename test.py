@@ -1,21 +1,27 @@
 from tsp_graph_init import Lieu, Graph, Route
 
-lieu = Lieu(50, 100)
+lieu1 = Lieu(50, 100)
 
 lieu2 = Lieu(100, 100)
 
-dist = lieu.distance(lieu2)
+dist1 = lieu1.distance(lieu2)
 
-graph = Graph([lieu, lieu2])
+graph1 = Graph([lieu1, lieu2])
+graph2 = Graph()
 
-mat = graph.calcul_matrice_cout_od()
+mat1 = graph1.calcul_matrice_cout_od()
+mat2 = graph2.calcul_matrice_cout_od()
 
-lieu_min = graph.plus_proche_voisin(lieu)
+lieu_min11 = graph1.plus_proche_voisin_argmin(lieu1)
+# lieu_min21 = graph2.plus_proche_voisin(lieu1)
 
-graph.sauvegarder_graph("test.csv")
+graph1.sauvegarder_graph("test.csv")
+graph1.charger_graph("test.csv")
 
-graph.charger_graph("test.csv")
+graph2.sauvegarder_graph("test.csv")
+graph2.charger_graph("test.csv")
 
-route = Route()
+route1 = Route()
+route2 = Route()
 
 print("OK")

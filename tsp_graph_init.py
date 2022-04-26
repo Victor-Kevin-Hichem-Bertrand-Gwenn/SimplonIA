@@ -9,9 +9,18 @@ class Lieu:
     ''' Cette classe sert à mémoriser les coordonnées x et y du lieu à visiter.
     '''
 
-    def __init__(self, x2, y2) -> None:
-        self.x = x2
-        self.y = y2
+    # def __init__(self, x, y) -> None:
+    #     self.x = x
+    #     self.y = y
+
+
+    def __init__(self, *args) -> None:
+        if args:
+            self.x = args[0]
+            self.y = args[1]
+        else:
+            self.x = random.randrange(LARGEUR)
+            self.y = random.randrange(HAUTEUR)
 
     def distance(self, lieu_suivant):
         '''Calcule la distance euclidienne entre un lieu et un autre
@@ -28,17 +37,20 @@ class Graph():
     '''Cette classe est utilisée pour mémoriser une liste de lieux (variable liste_lieux).
     '''
 
-    def __init__(self, liste_lieux) -> None:
-        self.liste_lieux = liste_lieux
+    # def __init__(self, liste_lieux) -> None:
+    #     self.liste_lieux = liste_lieux
 
     
-    def __init__(self) -> None:
-        self.liste_lieux = []
+    def __init__(self, *args) -> None:
+        if args:
+            self.liste_lieux = args[0]
+        else:
+            self.liste_lieux = []
 
-        for i in range(NB_LIEUX):
-            x = random.randrange(LARGEUR)
-            y = random.randrange(HAUTEUR)
-            self.liste_lieux.append(Lieu(x, y))
+            for i in range(NB_LIEUX):
+                x = random.randrange(LARGEUR)
+                y = random.randrange(HAUTEUR)
+                self.liste_lieux.append(Lieu(x, y))
 
 
     #TODO: Pop lieu1 pour obtenir une matrice triangulaire à laquelle on ajoute une diagonale de 0 et on transpose les valeurs
@@ -61,11 +73,12 @@ class Graph():
         return matrice_dist
 
 
-    def plus_proche_voisin(self, lieu):
-        '''Renvoie le plus proche voisin d'un lieu
+    def plus_proche_voisin_iter(self, lieu):
+        '''Renvoie le plus proche voisin d'un lieu de manière iterative sur les colonnes.
         '''
-
+        
         # Récupération de l'index du lieu de départ.
+
         index = self.liste_lieux.index(lieu)
 
         # Récupération de la liste des distances du lieu de départ aux autres.
@@ -76,6 +89,25 @@ class Graph():
 
         # Récupération de l'index de la distance minimale.
         index_dist_min = np.where(dist_lieux == dist_min)[0][0]
+
+        # Récupération du lieu associé à la distance minimale.
+        lieu_dist_min = self.liste_lieux[index_dist_min]
+
+        return lieu_dist_min
+    
+    
+    def plus_proche_voisin_argmin(self, lieu):
+        '''Renvoie le plus proche voisin d'un lieu
+        '''
+
+        # Récupération de l'index du lieu de départ.
+        index = self.liste_lieux.index(lieu)
+
+        # Masque des valeurs 0
+        masked_array = np.ma.MaskedArray(self.matrice_cout_od[index], self.matrice_cout_od[index]==0)
+
+        # Récupération de l'index de la distance minimale.
+        index_dist_min = np.argmin(masked_array)
 
         # Récupération du lieu associé à la distance minimale.
         lieu_dist_min = self.liste_lieux[index_dist_min]
@@ -124,13 +156,29 @@ class Route:
     '''Cette classe sert à générer une route traversant tous les lieux d'un graph.
     '''
 
-    def __init__(self, liste_index_lieux) -> None:
-        self.ordre = liste_index_lieux
-        if liste_index_lieux[0] != 0:
-            self.ordre.insert(0, 0)
-        if liste_index_lieux[-1] != 0:
-            self.ordre.insert(-1, 0)
+    # def __init__(self, liste_index_lieux) -> None:
+    #     self.ordre = liste_index_lieux
+    #     if liste_index_lieux[0] != 0:
+    #         self.ordre.insert(0, 0)
+    #     if liste_index_lieux[-1] != 0:
+    #         self.ordre.insert(-1, 0)
 
+
+    def __init__(self, *args) -> None:
+        if args:
+            self.ordre = args[0]
+            print(self.ordre)
+            if args[0][0] != 0:
+                self.ordre.insert(0, 0)
+            if args[0][-1] != 0:
+                self.ordre.insert(len(self.ordre), 0)
+        else:
+            self.ordre = [0]
+            liste_index_lieux = [i for i in range(1, NB_LIEUX)]
+            random.shuffle(liste_index_lieux)
+            self.ordre.extend(liste_index_lieux)
+            self.ordre.append(0)
+    
     
     def calcul_distance_route(self, graph:Graph):
         '''Calcul la distance totale d'une route

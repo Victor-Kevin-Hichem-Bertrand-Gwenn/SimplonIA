@@ -1,4 +1,6 @@
 import numpy as np
+import pandas as pd
+import random
 class Lieu :
     
     def __init__(self, coordonnee_X, coordonnee_Y):
@@ -33,8 +35,27 @@ class Graph :
         return self.le_plus_proche_voisin
         
 
+    def sauvegarder_graph(self, path):
+        self.df = pd.DataFrame([(lieu.x, lieu.y) for lieu in self.liste_lieux], columns =['x','y'])
+        self.df.to_csv(path, index=False)
 
 
+    @classmethod
+    def charger_graph(cls, path):
+        return pd.read_csv(path).values 
+
+
+
+
+class Route:
+    @classmethod
+    def ordre(cls,nb_lieux):
+        cls.ordre = [0]
+        tmp = list(range(1,nb_lieux))
+        random.shuffle(tmp)
+        cls.ordre.extend(tmp)
+        cls.ordre.append(0)
+        return cls.ordre
 
 
 

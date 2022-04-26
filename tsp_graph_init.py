@@ -57,6 +57,13 @@ class Route:
         cls.ordre.append(0)
         return cls.ordre
 
+    @classmethod
+    def calcul_distance_route(cls, ordre, matrice_od) :
+        cls.distance = 0
+        for i in range(len(ordre)-1):
+            cls.distance += matrice_od[ordre[i],ordre[i+1]]
+        return cls.distance
+
 
 
 lieu = Lieu(50, 100)

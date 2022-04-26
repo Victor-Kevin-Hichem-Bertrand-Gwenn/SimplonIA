@@ -226,9 +226,8 @@ class Affichage:
         canvas = tk.Canvas(fenetre, width=LARGEUR, height=HAUTEUR, bg="white")
         canvas.pack()
 
-        # création des cercles pour les villes ou points
-        for i, lieu in enumerate(graph.liste_lieux):
-            # création d'une ligne pointillée
+        # création d'une ligne pointillée
+        for lieu in graph.liste_lieux:
             plus_proche_voisin = graph.plus_proche_voisin_argmin(lieu)
             canvas.create_line(
                 lieu.x + self.x_cercle/2,
@@ -238,6 +237,9 @@ class Affichage:
                 fill="blue",
                 dash=(4, 4)
             )
+
+        # création des cercles pour les villes ou points
+        for i, lieu in enumerate(graph.liste_lieux):
             canvas.create_oval(
                 lieu.x,
                 lieu.y,
@@ -250,6 +252,7 @@ class Affichage:
                 lieu.y + self.y_cercle/2,
                 text = i
             )
+
 
         # création de la légende
         label = tk.Label(fenetre, text="legende : nombre d'itération, meilleure distance, etc...")

@@ -1,8 +1,9 @@
 import numpy as np
+import random
 
 LARGEUR = 800
 HAUTEUR = 600
-NB_LIEUX = 2
+NB_LIEUX = 10
 
 class Lieu:
     ''' Cette classe sert à mémoriser les coordonnées x et y du lieu à visiter.
@@ -29,6 +30,15 @@ class Graph():
 
     def __init__(self, liste_lieux) -> None:
         self.liste_lieux = liste_lieux
+
+    
+    def __init__(self) -> None:
+        self.liste_lieux = []
+
+        for i in range(NB_LIEUX):
+            x = random.randrange(LARGEUR)
+            y = random.randrange(HAUTEUR)
+            self.liste_lieux.append(Lieu(x, y))
 
 
     #TODO: Pop lieu1 pour obtenir une matrice triangulaire à laquelle on ajoute une diagonale de 0 et on transpose les valeurs
@@ -114,12 +124,23 @@ class Route:
     '''Cette classe sert à générer une route traversant tous les lieux d'un graph.
     '''
 
-    def __init__(self) -> None:
-        self.ordre = [0, 0]
+    def __init__(self, liste_index_lieux) -> None:
+        self.ordre = liste_index_lieux
+        if liste_index_lieux[0] != 0:
+            self.ordre.insert(0, 0)
+        if liste_index_lieux[-1] != 0:
+            self.ordre.insert(-1, 0)
 
     
-    def calcul_distance_route(self):
+    def calcul_distance_route(self, graph:Graph):
         '''Calcul la distance totale d'une route
         '''
         
-        return len(self.ordre) - 2
+        dist_totale = 0
+
+        # Parcours de l'ensemble des distances dans l'ordre des lieux de la route
+        for i, index_lieu in enumerate(self.ordre[:-1]):
+            dist_totale += graph.liste_lieux[index_lieu].distance(graph.liste_lieux[self.ordre[i+1]])
+
+
+        return dist_totale

@@ -47,11 +47,11 @@ class Graph :
         if args:
             self.liste_lieux = args[0]
         else:
-            self.liste_lieux = [Lieu(random.randrange(LARGEUR), random.randrange(HAUTEUR)) for _ in range(NB_LIEUX)]
+            self.liste_lieux = [Lieu(random.randrange(LARGEUR), random.randrange(HAUTEUR)) for _ in range(NB_LIEUX)]        
 
 
     #TODO: Pop lieu1 pour obtenir une matrice triangulaire à laquelle on ajoute une diagonale de 0 et on transpose les valeurs
-    def calcul_matrice_cout_od(self):
+    def calcul_matrice_cout_od(self) -> np.array:
         # array de 1 de dimension n*n
         lieux = len(self.liste_lieux)
         distance_matrice = np.ones((lieux,lieux))
@@ -210,35 +210,55 @@ class Route:
         return cls.distance
 
 
-def Affichage():
-    # création d'une fenêtre avec la classe Tk :
-    fenetre = tk.Tk()
+class Affichage:
+    x_cercle = 20
+    y_cercle = 20
 
-    # ajout d'un titre à ma fenêtre : 
-    fenetre.title("Groupe 4 - Victor-Kevin-Hichem-Bertrand-Gwenn")
+    def __init__(self, graph:Graph) -> None:
+        
+        # création d'une fenêtre avec la classe Tk :
+        fenetre = tk.Tk()
 
-    # Définir les dimensions par défaut la fenêtre principale :
-    # fenetre.geometry("800x600")
-    # finalement c'est le canvas qui défini la taille du graph
+        # ajout d'un titre à ma fenêtre : 
+        fenetre.title("Groupe 4 - Victor-Kevin-Hichem-Bertrand-Gwenn")
 
-    # Insertion surface dessinable (canvas) dans la fenêtre : 
-    canvas = tk.Canvas(fenetre, width=800, height=600, bg="white")
-    canvas.pack()
+        # Insertion surface dessinable (canvas) dans la fenêtre : 
+        canvas = tk.Canvas(fenetre, width=LARGEUR, height=HAUTEUR, bg="white")
+        canvas.pack()
 
-    # création d'un ligne pointillé
-    canvas.create_line(0, 100, 200, 0, fill="blue", dash=(4, 4))
+        # création des cercles pour les villes ou points
+        for i, lieu in enumerate(graph.liste_lieux):
+            # création d'une ligne pointillée
+            plus_proche_voisin = graph.plus_proche_voisin_argmin(lieu)
+            canvas.create_line(
+                lieu.x + self.x_cercle/2,
+                lieu.y + self.y_cercle/2,
+                plus_proche_voisin.x + self.x_cercle/2,
+                plus_proche_voisin.y + self.y_cercle/2,
+                fill="blue",
+                dash=(4, 4)
+            )
+            canvas.create_oval(
+                lieu.x,
+                lieu.y,
+                lieu.x + self.x_cercle,
+                lieu.y + self.y_cercle,
+                fill="silver")
 
-    # création des cercles pour les villes ou points
-    canvas.create_oval(10, 20, 20, 10, fill="red")
+            canvas.create_text(
+                lieu.x + self.x_cercle/2,
+                lieu.y + self.y_cercle/2,
+                text = i
+            )
 
-    # création de la légende
-    label = tk.Label(fenetre, text="legende : nombre d'itération, meilleure distance, etc...")
-    label.pack()
+        # création de la légende
+        label = tk.Label(fenetre, text="legende : nombre d'itération, meilleure distance, etc...")
+        label.pack()
 
-    # appui sur touche pour afficher/fermer la fenêtre : 
-    fenetre.bind('<Escape>', lambda x: fenetre.destroy())
-    # fenetre.bind("<KeyPress-n>", afficher les N meilleures routes trouvées en gris clair)
-    # fenetre.bind("<KeyPress-c>", afficher une matrice de coûts de déplacements entre les Lieux)
+        # appui sur touche pour afficher/fermer la fenêtre : 
+        fenetre.bind('<Escape>', lambda x: fenetre.destroy())
+        # fenetre.bind("<KeyPress-n>", afficher les N meilleures routes trouvées en gris clair)
+        # fenetre.bind("<KeyPress-c>", afficher une matrice de coûts de déplacements entre les Lieux)
 
-    # affichage de la fenetre créée : 
-    fenetre.mainloop()
+        # affichage de la fenetre créée : 
+        fenetre.mainloop()

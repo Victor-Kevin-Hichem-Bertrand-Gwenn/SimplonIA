@@ -1,4 +1,4 @@
-from tsp_graph_init import Lieu, Graph, Route
+from tsp_graph_init import Lieu, Graph, Route, Affichage
 
 lieu1 = Lieu(50, 100)
 
@@ -23,5 +23,7 @@ graph2.charger_graph("test.csv")
 
 route1 = Route()
 route2 = Route()
+
+Affichage(graph2)
 
 print("OK")

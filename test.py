@@ -24,6 +24,18 @@ graph2.charger_graph("test.csv")
 route1 = Route()
 route2 = Route()
 
-Affichage(graph2)
+# Affichage(graph2)
+
+lieu_depart = graph2.liste_lieux[0]
+lieux_visites = []
+parcours = []
+
+for lieu in graph2.liste_lieux:
+    print(lieu)
+    lieux_visites.append(lieu)
+    if lieux_visites == graph2.liste_lieux:
+        continue
+    else:
+        parcours.append(graph2.plus_proche_voisin_argmin(lieu, lieux_visites))
 
 print("OK")

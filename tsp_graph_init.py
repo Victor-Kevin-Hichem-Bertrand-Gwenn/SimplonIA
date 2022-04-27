@@ -68,6 +68,8 @@ class Graph :
         return distance_matrice
 
 
+    #TODO: À adapter pour retourner une liste des indices.
+    #FIXME: Retourne toujours la même valeur.
     def plus_proche_voisin_iter(self, lieu, *args):
         '''Renvoie le plus proche voisin d'un lieu de manière iterative sur les colonnes.
         '''
@@ -78,8 +80,8 @@ class Graph :
         # Test sur la présence de paramètres supplémentaires, notamment une liste des noeuds à ignorer.
         if args:
             # Récupération de la liste des lieux à ignorer.
-            args[0].append(lieu)
-            masked_lieu = args[0]
+            masked_lieu = args[0].copy()
+            masked_lieu.append(lieu)
 
             # Masque des valeurs des distances associées aux lieux à ignorer.
             mask = [True if lieu_dist in masked_lieu else False for lieu_dist in self.liste_lieux]
@@ -104,19 +106,26 @@ class Graph :
                     index_dist_min = i
                     
         # Récupération du lieu associé à la distance minimale.
-        lieu_dist_min = self.liste_lieux[index_dist_min]
+        # lieu_dist_min = self.liste_lieux[index_dist_min]
 
-        return lieu_dist_min
+        # return lieu_dist_min
+
+        return index_dist_min
     
     
+    #TODO: À adapter pour retourner une liste des indices.
+    #FIXME: Ne prend pas en compte la liste des valeurs déjà parcourue
     def plus_proche_voisin_argmin(self, lieu, *args):
         '''Renvoie le plus proche voisin d'un lieu parmis les noeuds d'un graphe ou d'une liste de noeuds
         '''
+        # Récupération de l'index du lieu de départ.
+        index = self.liste_lieux.index(lieu)
 
         # Test sur la présence de paramètres supplémentaires, notamment une liste des noeuds à ignorer
         if args:
             # Récupération de la liste des lieux à ignorer
-            masked_lieu = args.append(lieu)
+            masked_lieu = args[0].copy()
+            masked_lieu.append(lieu)
 
             # Masque des valeurs des distances associées aux lieux à ignorer
             mask = [True if lieu in masked_lieu else False for lieu in self.liste_lieux]
@@ -124,8 +133,6 @@ class Graph :
             masked_array = np.ma.MaskedArray(self.matrice_cout_od[index], mask)
 
         else:
-            # Récupération de l'index du lieu de départ.
-            index = self.liste_lieux.index(lieu)
 
             # Masque de la valeur associée au lieu de départ
             mask = self.matrice_cout_od[index]==0
@@ -136,10 +143,12 @@ class Graph :
         # Récupération de l'index de la distance minimale.
         index_dist_min = np.argmin(masked_array)
 
-        # Récupération du lieu associé à la distance minimale.
-        lieu_dist_min = self.liste_lieux[index_dist_min]
+        # # Récupération du lieu associé à la distance minimale.
+        # lieu_dist_min = self.liste_lieux[index_dist_min]
             
-        return lieu_dist_min
+        # return lieu_dist_min
+
+        return index_dist_min
 
     def charger_graph(self, fname):
         '''Charge une liste de lieux à partir d'un fichier csv des coordonnées
@@ -260,6 +269,7 @@ class Affichage:
         canvas = tk.Canvas(fenetre, width=LARGEUR, height=HAUTEUR, bg="white")
         canvas.pack()
 
+        #TODO: À adapter en fonction du retour de la fonction plus_proche_voisin_argmin
         # création d'une ligne pointillée
         for lieu in graph.liste_lieux:
             plus_proche_voisin = graph.plus_proche_voisin_argmin(lieu)

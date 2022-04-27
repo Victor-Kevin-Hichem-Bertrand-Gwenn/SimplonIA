@@ -4,6 +4,8 @@ import tkinter as tk
 import random
 import os
 
+from sympy import arg
+
 LARGEUR = 800
 HAUTEUR = 600
 NB_LIEUX = 10
@@ -66,45 +68,77 @@ class Graph :
         return distance_matrice
 
 
-    def plus_proche_voisin_iter(self, lieu):
+    def plus_proche_voisin_iter(self, lieu, *args):
         '''Renvoie le plus proche voisin d'un lieu de manière iterative sur les colonnes.
         '''
-        
-        # Récupération de l'index du lieu de départ.
 
+        # Récupération de l'index du lieu de départ.
         index = self.liste_lieux.index(lieu)
 
-        # Récupération de la liste des distances du lieu de départ aux autres.
-        dist_lieux = self.matrice_cout_od[index]
+        # Test sur la présence de paramètres supplémentaires, notamment une liste des noeuds à ignorer.
+        if args:
+            # Récupération de la liste des lieux à ignorer.
+            args[0].append(lieu)
+            masked_lieu = args[0]
 
-        # Récupération de la valeur minimale en ignorant le 0.
-        dist_min = np.sort(dist_lieux)[1]
+            # Masque des valeurs des distances associées aux lieux à ignorer.
+            mask = [True if lieu_dist in masked_lieu else False for lieu_dist in self.liste_lieux]
 
-        # Récupération de l'index de la distance minimale.
-        index_dist_min = np.where(dist_lieux == dist_min)[0][0]
+            # Création de la matrice masquée.
+            dist_lieux = np.ma.MaskedArray(self.matrice_cout_od[index], mask)
 
+        else:
+            # Récupération de la liste des distances du lieu de départ aux autres.
+            dist_lieux = self.matrice_cout_od[index]
+
+        # Instanciation des valeurs.
+        index_dist_min = None
+        dist_min_tmp = float("inf")
+        
+        # Itération sur les distances.
+        for i, dist in enumerate(dist_lieux):
+            if dist == 0:
+                continue
+            else:
+                if dist < dist_min_tmp:
+                    index_dist_min = i
+                    
         # Récupération du lieu associé à la distance minimale.
         lieu_dist_min = self.liste_lieux[index_dist_min]
 
         return lieu_dist_min
     
     
-    def plus_proche_voisin_argmin(self, lieu):
-        '''Renvoie le plus proche voisin d'un lieu
+    def plus_proche_voisin_argmin(self, lieu, *args):
+        '''Renvoie le plus proche voisin d'un lieu parmis les noeuds d'un graphe ou d'une liste de noeuds
         '''
 
-        # Récupération de l'index du lieu de départ.
-        index = self.liste_lieux.index(lieu)
+        # Test sur la présence de paramètres supplémentaires, notamment une liste des noeuds à ignorer
+        if args:
+            # Récupération de la liste des lieux à ignorer
+            masked_lieu = args.append(lieu)
 
-        # Masque des valeurs 0
-        masked_array = np.ma.MaskedArray(self.matrice_cout_od[index], self.matrice_cout_od[index]==0)
+            # Masque des valeurs des distances associées aux lieux à ignorer
+            mask = [True if lieu in masked_lieu else False for lieu in self.liste_lieux]
+            # Création de la matrice masquée
+            masked_array = np.ma.MaskedArray(self.matrice_cout_od[index], mask)
+
+        else:
+            # Récupération de l'index du lieu de départ.
+            index = self.liste_lieux.index(lieu)
+
+            # Masque de la valeur associée au lieu de départ
+            mask = self.matrice_cout_od[index]==0
+
+            # Masque des valeurs 0
+            masked_array = np.ma.MaskedArray(self.matrice_cout_od[index], self.matrice_cout_od[index]==0)
 
         # Récupération de l'index de la distance minimale.
         index_dist_min = np.argmin(masked_array)
 
         # Récupération du lieu associé à la distance minimale.
         lieu_dist_min = self.liste_lieux[index_dist_min]
-
+            
         return lieu_dist_min
 
     def charger_graph(self, fname):
